@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etoak.stu">
+<insert id="addStu" parameterType="stu">
+insert into students(name,age,birth,status) 
+values(#{name},#{age},#{birth},#{status}) 
+</insert>
+	<select id="queryStuById" parameterType="int" resultType="stu">
+	select * from students where id=#{id}
+	</select>
+	<delete id="deleteStu" parameterType="stu">
+	delete from Students where  id=#{id}
+	</delete>
+	
+	<resultMap id="stuMap" type="stu">
+		<id column="sid" property="id"></id>
+		<result  column="sname" property="name"></result>
+		<result column="sage" property="age" ></result>
+		<result column="sbirth" property="birth"></result>
+		<result column="status" property="status"></result>	
+			
+		<association property="sc"  javaType="sch" column="sid">
+		<id column="did" property="id" ></id>
+		<result column="dname" property="name"></result>
+		<result column="location" property="location" ></result>
+		</association> 
+	</resultMap>
+	<sql id="commonsql">select s.id as sid ,s.name as sname ,s.age as sage ,
+	s.birth as sbirth ,s.status as status ,c.id as did ,c.name as dname, 
+	c.location as location  from students s ,school c  where  s.sid=c.id  </sql>	
+	<select id="queryStuByConds" parameterType="map" resultMap="stuMap">
+	<include refid="commonsql"></include>
+		<if test="name!=null">
+				and  s.name=#{name}
+				</if>
+				<if test="sid!=null">
+				and  c.id=#{sid}  
+				</if>
+				limit  #{start} , #{max} 
+	</select>
+	<sql id="con" > select count(s.id)  from  students  s  where  1=1 </sql>		
+		<select id="querySchCount"  parameterType="map" resultType="int" >
+		<include refid="con"></include>
+				<if test="name!=null">
+				and  s.name=#{name}
+				</if>
+				<if test="sid!=null">
+				and  s.sid=#{sid}  
+				</if>
+		</select>		
+</mapper>

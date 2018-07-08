@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etoak.sch">
+<insert id="addSch" parameterType="sch">
+insert into school(name,location)   values(#{name},#{location}) 
+</insert>
+	<select id="querySchById" parameterType="int" resultType="sch">
+	select * from school where id=#{id}
+	</select>
+	<delete id="deleteSch" parameterType="sch">
+	delete from  school  where  id=#{id}
+	</delete>
+	<resultMap id="schMap" type="sch">
+		<result column="id" property="id"></result>
+		<result  column="name" property="name"></result>
+		<result  column="location" property="location"></result>
+	</resultMap>
+	<select id="queryAllSch" parameterType="map" resultMap="schMap">
+	select  id , name,location   from  school  
+	</select>
+</mapper>
